@@ -353,11 +353,13 @@ HEADERS += \
     $${HEADERS_LV_EXAMPLES} \
     lv_conf.h \
     lv_drv_conf.h \
-    lv_ex_conf.h
+    lv_ex_conf.h \
+    app.h
 
 SOURCES += \
     $${SOURCES_LV} \
     $${SOURCES_LV_DRIVERS} \
     $${SOURCES_LV_EXAMPLES} \
     main.c \
-    mouse_cursor_icon.c
+    mouse_cursor_icon.c \
+    app.c

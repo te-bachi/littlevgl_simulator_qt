@@ -63,7 +63,8 @@ int main(int argc, char** argv)
      * particular demo, test or tutorial.
      */
 
-    demo_create();
+    app_create(lv_disp_get_scr_act(NULL));
+    //demo_create();
     //benchmark_create();
     //lv_test_theme_1(lv_theme_night_init(210, NULL));
     //lv_test_theme_1(lv_theme_night_init(100, NULL));
