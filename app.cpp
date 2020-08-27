@@ -40,6 +40,7 @@ void eventDebug(lv_event_t event)
     }
 }
 
+static void temp_check_bounds();
 static void button_splash_cb(lv_obj_t *button_plus, lv_event_t event);
 static void button_plus_cb(lv_obj_t *button_plus, lv_event_t event);
 static void button_minus_cb(lv_obj_t *button_minus, lv_event_t event);
@@ -106,6 +107,10 @@ static lv_obj_t *label_temp_target;
 static lv_obj_t *label_temp_target_grad;
 static lv_obj_t *label_temp_target_celsius;
 static lv_obj_t *label_power;
+
+
+static const float TEMP_MIN = 0.0f;
+static const float TEMP_MAX = 80.0f;
 
 typedef enum {
     POWER_STATE_OFF,
@@ -205,6 +210,12 @@ splash_create(lv_obj_t *parent)
     lv_obj_align(label_splash, button_splash, LV_ALIGN_CENTER, 0, 0);
     lv_label_set_align(label_splash, LV_LABEL_ALIGN_CENTER);
     lv_label_set_style(label_splash, LV_LABEL_STYLE_MAIN, &style_label_subscript);
+}
+
+void
+splash_show()
+{
+    lv_scr_load(screen_splash);
 }
 
 void
@@ -401,6 +412,12 @@ app_create(lv_obj_t *parent)
 }
 
 void
+app_show()
+{
+    lv_scr_load(screen_app);
+}
+
+void
 app_temp_current_set(float temp)
 {
     lv_label_set_text_fmt(label_temp_current, "%5.1f", temp);
@@ -413,21 +430,44 @@ app_temp_target_set(float temp)
 }
 
 static void
+temp_check_bounds()
+{
+    if (temp_target >= TEMP_MAX) {
+        temp_target = TEMP_MAX;
+        lv_btn_set_state(button_plus, LV_BTN_STATE_INA);
+    } else {
+        lv_btn_set_state(button_plus, LV_BTN_STATE_REL);
+    }
+
+    if (temp_target <= TEMP_MIN) {
+        temp_target = TEMP_MIN;
+        lv_btn_set_state(button_minus, LV_BTN_STATE_INA);
+    } else {
+        lv_btn_set_state(button_minus, LV_BTN_STATE_REL);
+    }
+}
+
+static void
 button_splash_cb(lv_obj_t *button_plus, lv_event_t event)
 {
     if (event == LV_EVENT_CLICKED) {
-        lv_scr_load(screen_app);
+        app_show();
     }
 }
 
 static void
 button_plus_cb(lv_obj_t *button_plus, lv_event_t event)
 {
+    if (lv_btn_get_state(button_plus) == LV_BTN_STATE_INA) {
+        return;
+    }
+
     switch (event) {
         case LV_EVENT_PRESSED:
         case LV_EVENT_LONG_PRESSED:
         case LV_EVENT_LONG_PRESSED_REPEAT:
             temp_target += temp_step;
+            temp_check_bounds();
             app_temp_target_set(temp_target);
             break;
 
@@ -439,11 +479,16 @@ button_plus_cb(lv_obj_t *button_plus, lv_event_t event)
 static void
 button_minus_cb(lv_obj_t *button_minus, lv_event_t event)
 {
+    if (lv_btn_get_state(button_minus) == LV_BTN_STATE_INA) {
+        return;
+    }
+
     switch (event) {
         case LV_EVENT_PRESSED:
         case LV_EVENT_LONG_PRESSED:
         case LV_EVENT_LONG_PRESSED_REPEAT:
             temp_target -= temp_step;
+            temp_check_bounds();
             app_temp_target_set(temp_target);
             break;
 

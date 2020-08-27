@@ -56,6 +56,14 @@ SplashscreenTimerEvent::run()
         {
             splash_label_set_text("");
             splash_button_show();
+            m_state = SWITCH_TO_MAIN;
+            break;
+        }
+
+        case SWITCH_TO_MAIN:
+        {
+            app_show();
+            break;
         }
     }
 }

@@ -14,7 +14,8 @@ namespace dermair
                 INIT_COMPONENTS,
                 CONNECT_TO_TEC_CONTROLLER,
                 SYNCHRONISATION,
-                FINISH
+                FINISH,
+                SWITCH_TO_MAIN
             };
 
             State           m_state;
