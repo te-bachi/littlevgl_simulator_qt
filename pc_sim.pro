@@ -172,6 +172,14 @@ HEADERS_LV_EXAMPLES = \
     lv_examples/lv_tutorial/7_fonts/lv_tutorial_fonts.h \
     lv_examples/lv_tutorial/9_responsive/lv_tutorial_responsive.h
 
+### HEADERS_DERMA_IR ##########################################################
+HEADERS_DERMA_IR = \
+    task/CommunicationTask.h \
+    timer/SplashscreenTimerEvent.h \
+    image/fotofinder_logo.h \
+    image/fotofinder_logo_small.h \
+    Temperature.h
+
 ### SOURCES_LV ################################################################
 SOURCES_LV = \
     lvgl/src/lv_core/lv_debug.c \
@@ -347,10 +355,19 @@ SOURCES_LV_EXAMPLES = \
     lv_examples/lv_tutorial/7_fonts/lv_tutorial_fonts.c \
     lv_examples/lv_tutorial/9_responsive/lv_tutorial_responsive.c
 
+### SOURCES_DERMA_IR ##########################################################
+SOURCES_DERMA_IR = \
+    task/CommunicationTask.cpp \
+    timer/SplashscreenTimerEvent.cpp \
+    image/fotofinder_logo.c \
+    image/fotofinder_logo_small.c \
+    Temperature.cpp
+
 HEADERS += \
     $${HEADERS_LV} \
     $${HEADERS_LV_DRIVERS} \
     $${HEADERS_LV_EXAMPLES} \
+    $${HEADERS_DERMA_IR} \
     lv_conf.h \
     lv_drv_conf.h \
     lv_ex_conf.h \
@@ -360,6 +377,7 @@ SOURCES += \
     $${SOURCES_LV} \
     $${SOURCES_LV_DRIVERS} \
     $${SOURCES_LV_EXAMPLES} \
-    main.c \
+    $${SOURCES_DERMA_IR} \
+    main.cpp \
     mouse_cursor_icon.c \
-    app.c
+    app.cpp

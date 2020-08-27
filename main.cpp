@@ -21,6 +21,8 @@
 #include "lv_examples/lv_tests/lv_test_theme/lv_test_theme_1.h"
 #include "lv_examples/lv_tutorial/10_keyboard/lv_tutorial_keyboard.h"
 
+#include "app.h"
+
 /*********************
 *      DEFINES
 *********************/
@@ -34,6 +36,7 @@
 **********************/
 static void hal_init(void);
 static int tick_thread(void *data);
+static int timerevent_thread(void *data);
 
 /**********************
 *  STATIC VARIABLES
@@ -63,7 +66,14 @@ int main(int argc, char** argv)
      * particular demo, test or tutorial.
      */
 
-    app_create(lv_disp_get_scr_act(NULL));
+    lv_obj_t *screen_splash = splash_screen_create();
+    lv_obj_t *screen_app = app_screen_create();
+
+    style_create();
+    splash_create(screen_splash);
+    app_create(screen_app);
+    lv_scr_load(screen_splash);
+
     //demo_create();
     //benchmark_create();
     //lv_test_theme_1(lv_theme_night_init(210, NULL));
@@ -80,7 +90,7 @@ int main(int argc, char** argv)
         /* Periodically call the lv_task handler.
         * It could be done in a timer interrupt or an OS task too.*/
         lv_task_handler();
-        Sleep(10);       /*Just to let the system breathe */
+        SDL_Delay(10);       /*Just to let the system breathe */
     }
 
     return 0;
@@ -134,6 +144,7 @@ static void hal_init(void)
     * You have to call 'lv_tick_inc()' in every milliseconds
     * Create an SDL thread to do this*/
     SDL_CreateThread(tick_thread, "tick", NULL);
+    SDL_CreateThread(timerevent_thread, "timerevent", NULL);
 }
 
 /**
@@ -146,6 +157,20 @@ static int tick_thread(void *data)
     while (1) {
         lv_tick_inc(5);
         SDL_Delay(5);   /*Sleep for 1 millisecond*/
+    }
+
+    return 0;
+}
+
+#include "timer/SplashscreenTimerEvent.h"
+using namespace dermair;
+SplashscreenTimerEvent timerEvent(999);
+
+static int timerevent_thread(void *data)
+{
+    while (1) {
+        timerEvent.run();
+        SDL_Delay(500);
     }
 
     return 0;
